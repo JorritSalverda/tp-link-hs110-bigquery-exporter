@@ -3,6 +3,8 @@ package main
 import (
 	"net"
 	"time"
+
+	"cloud.google.com/go/bigquery"
 )
 
 func encrypt(request []byte, key uint8) []byte {
@@ -51,6 +53,7 @@ func mapDevicesToBigQueryMeasurement(devices []Device) *BigQueryMeasurement {
 			measurement.SmartPlugs = append(measurement.SmartPlugs, BigQuerySmartPlug{
 				Name:                  d.Info.System.Info.Alias,
 				CurrentPowerUsageWatt: float64(d.Info.EMeter.RealTime.PowerMilliWatt / 1000),
+				TotalWattHour:         bigquery.NullFloat64{Float64: float64(d.Info.EMeter.RealTime.TotalWattHour), Valid: true},
 			})
 		}
 	}

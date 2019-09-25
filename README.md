@@ -21,5 +21,5 @@ curl https://raw.githubusercontent.com/JorritSalverda/tp-link-hs110-bigquery-exp
 And for deploying (a new version of) the application run
 
 ```bash
-curl https://raw.githubusercontent.com/JorritSalverda/tp-link-hs110-bigquery-exporter/master/k8s/deployment.yaml | CONTAINER_TAG='0.1.6' envsubst \$CONTAINER_TAG | kubectl apply -f -
+curl https://raw.githubusercontent.com/JorritSalverda/tp-link-hs110-bigquery-exporter/master/k8s/deployment.yaml | CONTAINER_TAG='0.1.7' envsubst \$CONTAINER_TAG | kubectl apply -f -
 ```

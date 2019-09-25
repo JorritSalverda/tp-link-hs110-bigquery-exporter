@@ -3,6 +3,8 @@ package main
 import (
 	"net"
 	"time"
+
+	"cloud.google.com/go/bigquery"
 )
 
 type SystemInfo struct {
@@ -70,4 +72,5 @@ type BigQueryMeasurement struct {
 type BigQuerySmartPlug struct {
 	Name                  string  `bigquery:"name"`
 	CurrentPowerUsageWatt float64 `bigquery:"current_power_usage_watt"`
+	TotalWattHour         bigquery.NullFloat64 `json:"total_wh,omitempty"`
 }
