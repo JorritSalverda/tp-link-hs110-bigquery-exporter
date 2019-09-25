@@ -18,8 +18,14 @@ In order to configure the application run
 curl https://raw.githubusercontent.com/JorritSalverda/tp-link-hs110-bigquery-exporter/master/k8s/configmap.yaml | BQ_PROJECT_ID='gcp-project-id' BQ_DATASET='my-dataset' BQ_TABLE='my-table' envsubst \$BQ_PROJECT_ID,\$BQ_DATASET,\$BQ_TABLE | kubectl apply -f -
 ```
 
+And to accept UDP message run
+
+```bash
+curl https://raw.githubusercontent.com/JorritSalverda/tp-link-hs110-bigquery-exporter/master/k8s/service.yaml | kubectl apply -f -
+```
+
 And for deploying (a new version of) the application run
 
 ```bash
-curl https://raw.githubusercontent.com/JorritSalverda/tp-link-hs110-bigquery-exporter/master/k8s/deployment.yaml | CONTAINER_TAG='0.1.3' envsubst \$CONTAINER_TAG | kubectl apply -f -
+curl https://raw.githubusercontent.com/JorritSalverda/tp-link-hs110-bigquery-exporter/master/k8s/deployment.yaml | CONTAINER_TAG='0.1.4' envsubst \$CONTAINER_TAG | kubectl apply -f -
 ```

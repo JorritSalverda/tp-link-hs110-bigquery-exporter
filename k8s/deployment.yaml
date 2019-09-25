@@ -54,6 +54,10 @@ spec:
               name: tp-link-hs110-bigquery-exporter-configs
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /secrets/keyfile.json
+        ports:
+        - name: udp
+          containerPort: 8755
+          protocol: UDP
         resources:
           requests:
             cpu: 100m
