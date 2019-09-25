@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tp-link-hs110-bigquery-exporter
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tp-link-hs110-bigquery-exporter
+  namespace: tp-link-hs110-bigquery-exporter
+  labels:
+    app: tp-link-hs110-bigquery-exporter
+data:
+  bq-project-id: ${BQ_PROJECT_ID}
+  bq-dataset: ${BQ_DATASET}
+  bq-table: ${BQ_TABLE}
