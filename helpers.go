@@ -51,7 +51,7 @@ func mapDevicesToBigQueryMeasurement(devices []Device) *BigQueryMeasurement {
 			measurement.SmartPlugs = append(measurement.SmartPlugs, BigQuerySmartPlug{
 				Name:                  d.Info.System.Info.Alias,
 				CurrentPowerUsageWatt: float64(d.Info.EMeter.RealTime.PowerMilliWatt / 1000),
-				TotalWattSecond:       float64(d.Info.EMeter.RealTime.TotalWattHour / 3600),
+				TotalWattSecond:       float64(d.Info.EMeter.RealTime.TotalWattHour * 3600),
 			})
 		}
 	}
