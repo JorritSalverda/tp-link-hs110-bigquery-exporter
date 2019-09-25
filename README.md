@@ -15,11 +15,11 @@ cat keyfile.json | base64
 In order to configure the application run
 
 ```bash
-curl https://raw.githubusercontent.com/JorritSalverda/tp-link-hs110-bigquery-exporter/master/k8s/configmap.yaml | BQ_PROJECT_ID='gcp-project-id' BQ_DATASET='my-dataset' BQ_TABLE='my-table' envsubst \$BQ_PROJECT_ID,\$BQ_DATASET,\$BQ_TABLE | kubectl apply -f -
+curl https://raw.githubusercontent.com/JorritSalverda/tp-link-hs110-bigquery-exporter/master/k8s/configmap.yaml | BQ_PROJECT_ID='gcp-project-id' BQ_DATASET='my-dataset' BQ_TABLE='my-table' TIMEOUT_SECONDS='5' INTERVAL_SECONDS='60' envsubst \$BQ_PROJECT_ID,\$BQ_DATASET,\$BQ_TABLE,\$TIMEOUT_SECONDS,\$INTERVAL_SECONDS | kubectl apply -f -
 ```
 
 And for deploying (a new version of) the application run
 
 ```bash
-curl https://raw.githubusercontent.com/JorritSalverda/tp-link-hs110-bigquery-exporter/master/k8s/deployment.yaml | CONTAINER_TAG='0.1.9' envsubst \$CONTAINER_TAG | kubectl apply -f -
+curl https://raw.githubusercontent.com/JorritSalverda/tp-link-hs110-bigquery-exporter/master/k8s/deployment.yaml | CONTAINER_TAG='0.1.10' envsubst \$CONTAINER_TAG | kubectl apply -f -
 ```

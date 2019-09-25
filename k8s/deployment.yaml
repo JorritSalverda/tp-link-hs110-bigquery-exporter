@@ -52,6 +52,16 @@ spec:
             configMapKeyRef:
               key: bq-table
               name: tp-link-hs110-bigquery-exporter-configs
+        - name: TIMEOUT_SECONDS
+          valueFrom:
+            configMapKeyRef:
+              key: timeout-seconds
+              name: tp-link-hs110-bigquery-exporter-configs
+        - name: INTERVAL_SECONDS
+          valueFrom:
+            configMapKeyRef:
+              key: interval-seconds
+              name: tp-link-hs110-bigquery-exporter-configs
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /secrets/keyfile.json
         ports:

@@ -25,6 +25,8 @@ var (
 	bigqueryProjectID = kingpin.Flag("bigquery-project-id", "Google Cloud project id that contains the BigQuery dataset").Envar("BQ_PROJECT_ID").Required().String()
 	bigqueryDataset   = kingpin.Flag("bigquery-dataset", "Name of the BigQuery dataset").Envar("BQ_DATASET").Required().String()
 	bigqueryTable     = kingpin.Flag("bigquery-table", "Name of the BigQuery table").Envar("BQ_TABLE").Required().String()
+	timeoutSeconds    = kingpin.Flag("timeout-seconds", "Timeout in seconds waiting for responses from devices").Envar("TIMEOUT_SECONDS").Required().Int()
+	intervalSeconds   = kingpin.Flag("interval-seconds", "Interval in seconds between 2 measurements").Envar("INTERVAL_SECONDS").Required().Int()
 )
 
 func main() {
@@ -42,6 +44,10 @@ func main() {
 		Str("goVersion", goVersion).
 		Msgf("Starting %v version %v...", app, version)
 
+	if *timeoutSeconds >= *intervalSeconds {
+		log.Fatal().Msgf("Timeout of %vs should be less than interval of %s", *timeoutSeconds, *intervalSeconds)
+	}
+
 	bigqueryClient, err := NewBigQueryClient(*bigqueryProjectID)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed creating bigquery client")
@@ -57,7 +63,7 @@ func main() {
 	// request smart home devices every minute
 	for {
 		log.Info().Msg("Discovering devices...")
-		devices, err := client.DiscoverDevices(5)
+		devices, err := client.DiscoverDevices(*timeoutSeconds)
 		if err != nil {
 			log.Warn().Err(err).Msg("Failed discovering devices")
 		} else {
@@ -75,7 +81,10 @@ func main() {
 			}
 		}
 
-		time.Sleep(time.Duration(55 * time.Second))
+		sleep := *intervalSeconds - *timeoutSeconds
+
+		log.Info().Msgf("Sleeping for %vs...", sleep)
+		time.Sleep(time.Duration(sleep) * time.Second)
 	}
 }
 
