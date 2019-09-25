@@ -70,6 +70,7 @@ spec:
         volumeMounts:
         - name: secrets
           mountPath: /secrets
+      hostNetwork: true
       terminationGracePeriodSeconds: 300
       volumes:
       - name: secrets
