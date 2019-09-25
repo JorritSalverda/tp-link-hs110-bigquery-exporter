@@ -14,5 +14,5 @@ data:
   bq-project-id: ${BQ_PROJECT_ID}
   bq-dataset: ${BQ_DATASET}
   bq-table: ${BQ_TABLE}
-  timeout-seconds: "${TIMEOUT_SECONDS}"
-  interval-seconds: "${INTERVAL_SECONDS}"
+  timeout-seconds: '${TIMEOUT_SECONDS}'
+  interval-seconds: '${INTERVAL_SECONDS}'
