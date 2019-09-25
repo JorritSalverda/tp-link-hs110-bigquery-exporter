@@ -45,7 +45,7 @@ func main() {
 		Msgf("Starting %v version %v...", app, version)
 
 	if *timeoutSeconds >= *intervalSeconds {
-		log.Fatal().Msgf("Timeout of %vs should be less than interval of %s", *timeoutSeconds, *intervalSeconds)
+		log.Fatal().Msgf("Timeout of %v seconds should be less than interval of %v seconds", *timeoutSeconds, *intervalSeconds)
 	}
 
 	bigqueryClient, err := NewBigQueryClient(*bigqueryProjectID)
@@ -83,7 +83,7 @@ func main() {
 
 		sleep := *intervalSeconds - *timeoutSeconds
 
-		log.Info().Msgf("Sleeping for %vs...", sleep)
+		log.Info().Msgf("Sleeping for %v seconds...", sleep)
 		time.Sleep(time.Duration(sleep) * time.Second)
 	}
 }
