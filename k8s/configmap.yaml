@@ -6,7 +6,7 @@ metadata:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: tp-link-hs110-bigquery-exporter
+  name: tp-link-hs110-bigquery-exporter-configs
   namespace: tp-link-hs110-bigquery-exporter
   labels:
     app: tp-link-hs110-bigquery-exporter
