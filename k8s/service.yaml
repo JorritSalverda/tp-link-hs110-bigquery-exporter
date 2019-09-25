@@ -17,6 +17,5 @@ spec:
     port: 8755
     targetPort: udp
     protocol: UDP
-    nodePort: 8755
   selector:
     app: tp-link-hs110-bigquery-exporter
