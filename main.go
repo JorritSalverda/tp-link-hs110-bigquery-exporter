@@ -55,26 +55,24 @@ func main() {
 	}
 
 	// request smart home devices every minute
-	go func() {
-		for {
-			devices, err := client.DiscoverDevices(5)
-			if err != nil {
-				log.Warn().Err(err).Msg("Failed discovering devices")
-			} else {
-				log.Info().Interface("devices", devices)
+	for {
+		devices, err := client.DiscoverDevices(5)
+		if err != nil {
+			log.Warn().Err(err).Msg("Failed discovering devices")
+		} else {
+			log.Info().Interface("devices", devices)
 
-				measurement := mapDevicesToBigQueryMeasurement(devices)
-				if measurement != nil {
-					err = bigqueryClient.InsertMeasurements(*bigqueryDataset, *bigqueryTable, []BigQueryMeasurement{*measurement})
-					if err != nil {
-						log.Fatal().Err(err).Msg("Failed inserting measurements into bigquery table")
-					}
+			measurement := mapDevicesToBigQueryMeasurement(devices)
+			if measurement != nil {
+				err = bigqueryClient.InsertMeasurements(*bigqueryDataset, *bigqueryTable, []BigQueryMeasurement{*measurement})
+				if err != nil {
+					log.Fatal().Err(err).Msg("Failed inserting measurements into bigquery table")
 				}
 			}
-
-			time.Sleep(time.Duration(55 * time.Second))
 		}
-	}()
+
+		time.Sleep(time.Duration(55 * time.Second))
+	}
 }
 
 func initLogging() {
