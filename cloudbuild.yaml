@@ -1,0 +1,14 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', 
+         '--build-arg',
+         'COMMIT_SHA=${COMMIT_SHA}',
+         '--build-arg',
+         'BRANCH_NAME=${BRANCH_NAME}',
+         '--build-arg',
+         'REPO_NAME=${REPO_NAME}',
+          '-t', 
+          'gcr.io/${PROJECT_ID}/tp-link-hs110-bigquery-exporter:${COMMIT_SHA}', 
+          '.' ]
+images:
+- 'gcr.io/${PROJECT_ID}/tp-link-hs110-bigquery-exporter:${COMMIT_SHA}'
