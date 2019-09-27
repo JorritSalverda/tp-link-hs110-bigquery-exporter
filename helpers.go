@@ -2,6 +2,7 @@ package main
 
 import (
 	"net"
+	"strings"
 	"time"
 )
 
@@ -47,7 +48,7 @@ func mapDevicesToBigQueryMeasurement(devices []Device) *BigQueryMeasurement {
 	}
 
 	for _, d := range devices {
-		if d.Info != nil && d.Info.System != nil && d.Info.EMeter != nil {
+		if d.Info != nil && d.Info.System != nil && d.Info.EMeter != nil && !strings.HasPrefix(d.Info.System.Info.Alias, "TP-LINK") {
 			measurement.SmartPlugs = append(measurement.SmartPlugs, BigQuerySmartPlug{
 				Name:                  d.Info.System.Info.Alias,
 				CurrentPowerUsageWatt: float64(d.Info.EMeter.RealTime.PowerMilliWatt / 1000),
