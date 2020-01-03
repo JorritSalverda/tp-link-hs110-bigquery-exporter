@@ -69,15 +69,20 @@ func main() {
 		} else {
 			log.Info().Interface("devices", devices).Msg("Retrieved devices...")
 
-			measurement := mapDevicesToBigQueryMeasurement(devices)
-			if measurement != nil {
-				log.Info().Interface("measurement", measurement).Msg("Inserting measurements into bigquery...")
-				err = bigqueryClient.InsertMeasurements(*bigqueryDataset, *bigqueryTable, []BigQueryMeasurement{*measurement})
-				if err != nil {
-					log.Fatal().Err(err).Msg("Failed inserting measurements into bigquery table")
-				}
+			devices, err = client.GetUsageForAllDevices(devices, *timeoutSeconds)
+			if err != nil {
+				log.Warn().Err(err).Msg("Failed retrieving metrics for devices")
 			} else {
-				log.Warn().Msg("No measurement has been recorded...")
+				measurement := mapDevicesToBigQueryMeasurement(devices)
+				if measurement != nil {
+					log.Info().Interface("measurement", measurement).Msg("Inserting measurements into bigquery...")
+					err = bigqueryClient.InsertMeasurements(*bigqueryDataset, *bigqueryTable, []BigQueryMeasurement{*measurement})
+					if err != nil {
+						log.Fatal().Err(err).Msg("Failed inserting measurements into bigquery table")
+					}
+				} else {
+					log.Warn().Msg("No measurement has been recorded...")
+				}
 			}
 		}
 
