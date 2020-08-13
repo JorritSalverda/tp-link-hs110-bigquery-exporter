@@ -1,25 +1,32 @@
-# How to run
+## Installation
 
-Run this once for creating the secret with GCP service account keyfile
+To install this application using Helm run the following commands: 
 
 ```bash
-curl https://raw.githubusercontent.com/JorritSalverda/tp-link-hs110-bigquery-exporter/master/k8s/secret.yaml | GCP_SERVICE_ACCOUNT_KEYFILE='<base64 encoded service account keyfile>' envsubst \$GCP_SERVICE_ACCOUNT_KEYFILE | kubectl apply -f -
+helm repo add jorritsalverda https://helm.jorritsalverda.com
+kubectl create namespace tp-link-hs110-bigquery-exporter
+
+helm upgrade \
+  tp-link-hs110-bigquery-exporter \
+  jorritsalverda/tp-link-hs110-bigquery-exporter \
+  --install \
+  --namespace tp-link-hs110-bigquery-exporter \
+  --set config.bqProjectID=your-project-id \
+  --set config.bqDataset=your-dataset \
+  --set config.bqTable=your-table \
+  --set secret.gcpServiceAccountKeyfile='{abc: blabla}' \
+  --wait
 ```
 
-The service account keyfile can include newlines, since it's mounted as a file; so encode it using
+If you later on want to upgrade without specifying all values again you can use
 
 ```bash
-cat keyfile.json | base64
-```
-
-In order to configure the application run
-
-```bash
-curl https://raw.githubusercontent.com/JorritSalverda/tp-link-hs110-bigquery-exporter/master/k8s/configmap.yaml | BQ_PROJECT_ID='gcp-project-id' BQ_DATASET='my-dataset' BQ_TABLE='my-table' TIMEOUT_SECONDS='5' INTERVAL_SECONDS='60' envsubst \$BQ_PROJECT_ID,\$BQ_DATASET,\$BQ_TABLE,\$TIMEOUT_SECONDS,\$INTERVAL_SECONDS | kubectl apply -f -
-```
-
-And for deploying (a new version of) the application run
-
-```bash
-curl https://raw.githubusercontent.com/JorritSalverda/tp-link-hs110-bigquery-exporter/master/k8s/deployment.yaml | CONTAINER_TAG='0.1.13' envsubst \$CONTAINER_TAG | kubectl apply -f -
+helm upgrade \
+  tp-link-hs110-bigquery-exporter \
+  jorritsalverda/tp-link-hs110-bigquery-exporter \
+  --install \
+  --namespace tp-link-hs110-bigquery-exporter \
+  --reuse-values \
+  --set cronjob.schedule='*/1 * * * *' \
+  --wait
 ```

@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "tp-link-hs110-bigquery-exporter.fullname" . }}
+  labels:
+    {{- include "tp-link-hs110-bigquery-exporter.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "tp-link-hs110-bigquery-exporter.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "tp-link-hs110-bigquery-exporter.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+      serviceAccountName: {{ include "tp-link-hs110-bigquery-exporter.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 10 }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: BQ_PROJECT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: bq-project-id
+              name: {{ include "tp-link-hs110-bigquery-exporter.fullname" . }}
+        - name: BQ_DATASET
+          valueFrom:
+            configMapKeyRef:
+              key: bq-dataset
+              name: {{ include "tp-link-hs110-bigquery-exporter.fullname" . }}
+        - name: BQ_TABLE
+          valueFrom:
+            configMapKeyRef:
+              key: bq-table
+              name: {{ include "tp-link-hs110-bigquery-exporter.fullname" . }}
+        - name: TIMEOUT_SECONDS
+          valueFrom:
+            configMapKeyRef:
+              key: timeout-seconds
+              name: {{ include "tp-link-hs110-bigquery-exporter.fullname" . }}
+        - name: INTERVAL_SECONDS
+          valueFrom:
+            configMapKeyRef:
+              key: interval-seconds
+              name: {{ include "tp-link-hs110-bigquery-exporter.fullname" . }}
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /secrets/keyfile.json
+        ports:
+        - name: udp
+          containerPort: 8755
+          protocol: UDP
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        volumeMounts:
+        - name: secrets
+          mountPath: /secrets
+      hostNetwork: true
+      terminationGracePeriodSeconds: 300
+      volumes:
+      - name: secrets
+        secret:
+          defaultMode: 420
+          secretName: {{ include "tp-link-hs110-bigquery-exporter.fullname" . }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
