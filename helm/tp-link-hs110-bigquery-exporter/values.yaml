@@ -6,8 +6,8 @@ config:
   bqProjectID: gcp-project-id
   bqDataset: my-dataset
   bqTable: my-table
-  timeoutSeconds: 60
-  intervalSeconds: 3
+  timeoutSeconds: 3
+  intervalSeconds: 60
 
 secret:
   gcpServiceAccountKeyfile: '{}'
