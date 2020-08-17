@@ -1,19 +1,17 @@
 package main
 
 import (
-	"fmt"
-	stdlog "log"
-	"os"
 	"runtime"
 	"time"
 
 	"github.com/alecthomas/kingpin"
-	"github.com/rs/zerolog"
+	foundation "github.com/estafette/estafette-foundation"
 	"github.com/rs/zerolog/log"
 )
 
 var (
 	// set when building the application
+	appgroup  string
 	app       string
 	version   string
 	branch    string
@@ -34,15 +32,8 @@ func main() {
 	// parse command line parameters
 	kingpin.Parse()
 
-	initLogging()
-
-	// log startup message
-	log.Info().
-		Str("branch", branch).
-		Str("revision", revision).
-		Str("buildDate", buildDate).
-		Str("goVersion", goVersion).
-		Msgf("Starting %v version %v...", app, version)
+	// init log format from envvar ESTAFETTE_LOG_FORMAT
+	foundation.InitLoggingFromEnv(foundation.NewApplicationInfo(appgroup, app, version, branch, revision, buildDate))
 
 	if *timeoutSeconds >= *intervalSeconds {
 		log.Fatal().Msgf("Timeout of %v seconds should be less than interval of %v seconds", *timeoutSeconds, *intervalSeconds)
@@ -91,32 +82,6 @@ func main() {
 		log.Info().Msgf("Sleeping for %v seconds...", sleep)
 		time.Sleep(time.Duration(sleep) * time.Second)
 	}
-}
-
-func initLogging() {
-	// log as severity for stackdriver logging to recognize the level
-	zerolog.LevelFieldName = "severity"
-
-	output := zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: time.RFC3339}
-	output.FormatLevel = func(i interface{}) string {
-		return ""
-	}
-	output.FormatMessage = func(i interface{}) string {
-		return fmt.Sprintf("%s", i)
-	}
-	output.FormatFieldName = func(i interface{}) string {
-		return fmt.Sprintf("| %s: ", i)
-	}
-	output.FormatFieldValue = func(i interface{}) string {
-		return fmt.Sprintf("%s", i)
-	}
-
-	log.Logger = zerolog.New(output).With().Timestamp().Logger()
-
-	// use zerolog for any logs sent via standard log library
-	stdlog.SetFlags(0)
-	stdlog.SetOutput(log.Logger)
-
 }
 
 func initBigqueryTable(bigqueryClient BigQueryClient) {

@@ -12,6 +12,8 @@ config:
 secret:
   gcpServiceAccountKeyfile: '{}'
 
+logFormat: json
+
 image:
   repository: jsalverda/tp-link-hs110-bigquery-exporter
   pullPolicy: IfNotPresent
