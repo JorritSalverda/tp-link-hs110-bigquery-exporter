@@ -1,6 +1,6 @@
 apiVersion: v2
 name: tp-link-hs110-bigquery-exporter
-description: A Helm chart for Kubernetes
+description: Stores TP-Link HS110 Power Plugs energy usage readings in Google BigQuery
 
 # A chart can be either an 'application' or a 'library' chart.
 #
