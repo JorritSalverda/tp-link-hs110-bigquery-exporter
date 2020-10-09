@@ -1,3 +1,7 @@
+# Note
+
+This application is superseded by [jarvis-tp-link-hs-110-exporter](https://github.com/JorritSalverda/jarvis-tp-link-hs-110-exporter).
+
 ## Installation
 
 To install this application using Helm run the following commands: 
